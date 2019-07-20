@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Group 2 - Calorie Counter</string>
+    <string name="empty_list_text" />
+    <string name="enter_title" >Country</string>
+    <string name="enter_desc" >Currency</string>
+    <string name="add_record" >Add Record</string>
+    <string name="btn_update" >Update</string>
+    <string name="btn_delete" >Delete</string>
+</resources>
