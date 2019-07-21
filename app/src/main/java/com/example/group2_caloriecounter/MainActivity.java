@@ -11,7 +11,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String food;
     String calories;
-    DBManager dbManager;
     Button buttonEnter, buttonViewGraph, buttonList;
 
     @Override
@@ -26,9 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonViewGraph = findViewById(R.id.buttonViewGraph);
         buttonList = findViewById(R.id.buttonList);
 
-        dbManager = new DBManager(this);
-        dbManager.open();
-
         buttonEnter.setOnClickListener(this);
         buttonViewGraph.setOnClickListener(this);
         buttonList.setOnClickListener(this);
@@ -42,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 food = findViewById(R.id.editTextFood).toString();
                 calories = findViewById(R.id.editTextCalories).toString();
 
-                dbManager.insert(food, calories);
+
 
                 break;
 

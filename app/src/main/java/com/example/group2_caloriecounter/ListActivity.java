@@ -1,84 +1,105 @@
 package com.example.group2_caloriecounter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ListActivity extends AppCompatActivity {
+    private Context mContext;
+    private Activity mActivity;
 
-    private DBManager dbManager;
 
-    private ListView listView;
+    private Button mButtonDo;
+    private TextView mTextView;
+    private String mJSONURLString = "http://pastebin.com/raw/Em972E5s";
 
-    private SimpleCursorAdapter adapter;
-
-    final String[] from = new String[] { DatabaseHelper._ID, DatabaseHelper.DATE,
-            DatabaseHelper.SUBJECT, DatabaseHelper.DESC };
-
-    final int[] to = new int[] { R.id.id, R.id.date, R.id.food, R.id.calories};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list);
 
-        setContentView(R.layout.fragment_emp_list);
+        // Get the application context
+        mContext = getApplicationContext();
+        mActivity = ListActivity.this;
 
-        dbManager = new DBManager(this);
-        dbManager.open();
-        Cursor cursor = dbManager.fetch();
+        // Get the widget reference from XML layout
+        mTextView = (TextView) findViewById(R.id.tv);
 
-        listView = findViewById(R.id.list_view);
-        listView.setEmptyView(findViewById(R.id.empty));
 
-        adapter = new SimpleCursorAdapter(this, R.layout.activity_view_record, cursor, from, to, 0);
-        adapter.notifyDataSetChanged();
+                // Empty the TextView
+                mTextView.setText("");
 
-        listView.setAdapter(adapter);
+                // Initialize a new RequestQueue instance
+                RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        // OnCLickListener For List Items
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long viewId) {
-                TextView titleTextView = view.findViewById(R.id.food);
-                TextView descTextView = view.findViewById(R.id.calories);
+                // Initialize a new JsonArrayRequest instance
+                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                        Request.Method.GET,
+                        mJSONURLString,
+                        null,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                // Do something with response
+                                //mTextView.setText(response.toString());
 
-                String title = titleTextView.getText().toString();
-                String desc = descTextView.getText().toString();
+                                // Process the JSON
+                                try{
+                                    // Loop through the array elements
+                                    for(int i=0;i<response.length();i++){
+                                        // Get current json object
+                                        JSONObject student = response.getJSONObject(i);
 
-                Intent modify_intent = new Intent(getApplicationContext(), ModifyListActivity.class);
-                modify_intent.putExtra("food", title);
-                modify_intent.putExtra("count", desc);
+                                        // Get the current student (json object) data
+                                        String firstName = student.getString("firstname");
+                                        String lastName = student.getString("lastname");
+                                        String age = student.getString("age");
 
-                startActivity(modify_intent);
-            }
-        });
-    }
+                                        // Display the formatted json data in text view
+                                        mTextView.append(firstName +" " + lastName +"\nAge : " + age);
+                                        mTextView.append("\n\n");
+                                    }
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener(){
+                            @Override
+                            public void onErrorResponse(VolleyError error){
+                                // Do something when error occurred
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+                            }
+                        }
+                );
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        if (id == R.id.add_record) {
-
-            Intent add_mem = new Intent(this, MainActivity.class);
-            startActivity(add_mem);
-
-        }
-        return super.onOptionsItemSelected(item);
+                // Add JsonArrayRequest to the RequestQueue
+                requestQueue.add(jsonArrayRequest);
     }
 }
