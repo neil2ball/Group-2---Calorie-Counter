@@ -1,10 +1,12 @@
 package com.example.group2_caloriecounter;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.cursoradapter.widget.SimpleCursorAdapter;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,77 +31,77 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListActivity extends AppCompatActivity {
-    private Context mContext;
-    private Activity mActivity;
 
+    private String url = "http://192.168.0.21:8080/employees";
 
-    private Button mButtonDo;
-    private TextView mTextView;
-    private String mJSONURLString = "http://pastebin.com/raw/Em972E5s";
+    private RecyclerView mList;
 
+    private RecyclerView.Adapter adapter;
+    private LinearLayoutManager layoutManager;
+
+    private DividerItemDecoration dividerItemDecoration;
+    private List<Movie> movieList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        // Get the application context
-        mContext = getApplicationContext();
-        mActivity = ListActivity.this;
+        mList = findViewById(R.id.main_list);
 
-        // Get the widget reference from XML layout
-        mTextView = (TextView) findViewById(R.id.tv);
+        movieList = new ArrayList<>();
+        adapter = new MovieAdapter(getApplicationContext(),movieList);
 
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        dividerItemDecoration = new DividerItemDecoration(mList.getContext(), layoutManager.getOrientation());
 
-                // Empty the TextView
-                mTextView.setText("");
+        mList.setHasFixedSize(true);
+        mList.setLayoutManager(layoutManager);
+        mList.addItemDecoration(dividerItemDecoration);
+        mList.setAdapter(adapter);
 
-                // Initialize a new RequestQueue instance
-                RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        getData();
+    }
 
-                // Initialize a new JsonArrayRequest instance
-                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                        Request.Method.GET,
-                        mJSONURLString,
-                        null,
-                        new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                // Do something with response
-                                //mTextView.setText(response.toString());
+    private void getData() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
-                                // Process the JSON
-                                try{
-                                    // Loop through the array elements
-                                    for(int i=0;i<response.length();i++){
-                                        // Get current json object
-                                        JSONObject student = response.getJSONObject(i);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
 
-                                        // Get the current student (json object) data
-                                        String firstName = student.getString("firstname");
-                                        String lastName = student.getString("lastname");
-                                        String age = student.getString("age");
+                        Movie movie = new Movie();
+                        movie.setTitle(jsonObject.getInt("id"));
+                        movie.setRating(jsonObject.getString("name"));
+                        movie.setYear(jsonObject.getString("role"));
 
-                                        // Display the formatted json data in text view
-                                        mTextView.append(firstName +" " + lastName +"\nAge : " + age);
-                                        mTextView.append("\n\n");
-                                    }
-                                }catch (JSONException e){
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener(){
-                            @Override
-                            public void onErrorResponse(VolleyError error){
-                                // Do something when error occurred
-
-                            }
-                        }
-                );
-
-                // Add JsonArrayRequest to the RequestQueue
-                requestQueue.add(jsonArrayRequest);
+                        movieList.add(movie);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        progressDialog.dismiss();
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley", error.toString());
+                progressDialog.dismiss();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
 }
