@@ -5,23 +5,30 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+
     <TextView
-        android:id="@+id/main_title"
+        android:id="@+id/main_food"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:text="food"
         android:textSize="18sp"/>
 
-
     <TextView
-        android:id="@+id/main_rating"
+        android:id="@+id/main_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Rating"/>
+        android:text="count"/>
 
     <TextView
-        android:id="@+id/main_year"
+        android:id="@+id/main_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Year"/>
+        android:text="date"/>
+
+    <TextView
+        android:id="@+id/main_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="id"/>
+
 </LinearLayout>

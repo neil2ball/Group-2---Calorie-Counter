@@ -5,22 +5,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -36,7 +23,7 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
-    private String url = "http://192.168.0.21:8080/employees";
+    private String url = "http://192.168.0.19:8080/employees";
 
     private RecyclerView mList;
 
@@ -69,10 +56,6 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -81,24 +64,24 @@ public class ListActivity extends AppCompatActivity {
                         JSONObject jsonObject = response.getJSONObject(i);
 
                         Movie movie = new Movie();
-                        movie.setTitle(jsonObject.getInt("id"));
-                        movie.setRating(jsonObject.getString("name"));
-                        movie.setYear(jsonObject.getString("role"));
+
+                        movie.setFood(jsonObject.getString("food"));
+                        movie.setCount(jsonObject.getString("count"));
+                        movie.setDate(jsonObject.getString("date"));
+                        movie.setId(jsonObject.getInt("id"));
+
 
                         movieList.add(movie);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        progressDialog.dismiss();
                     }
                 }
                 adapter.notifyDataSetChanged();
-                progressDialog.dismiss();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Volley", error.toString());
-                progressDialog.dismiss();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);

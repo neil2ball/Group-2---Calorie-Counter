@@ -33,9 +33,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         Movie movie = list.get(position);
 
-        holder.textTitle.setText(String.valueOf(movie.getTitle()));
-        holder.textRating.setText(movie.getRating());
-        holder.textYear.setText(movie.getYear());
+
+        holder.textFood.setText(movie.getFood());
+        holder.textCount.setText(movie.getCount());
+        holder.textDate.setText(movie.getDate());
+        holder.textId.setText(String.valueOf(movie.getId()));
 
     }
 
@@ -45,14 +47,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textTitle, textRating, textYear;
+        public TextView  textFood, textCount, textDate, textId;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            textTitle = itemView.findViewById(R.id.main_title);
-            textRating = itemView.findViewById(R.id.main_rating);
-            textYear = itemView.findViewById(R.id.main_year);
+            textFood = itemView.findViewById(R.id.main_food);
+            textCount = itemView.findViewById(R.id.main_count);
+            textDate = itemView.findViewById(R.id.main_date);
+            textId = itemView.findViewById(R.id.main_id);
         }
     }
 

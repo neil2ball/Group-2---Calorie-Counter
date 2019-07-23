@@ -6,41 +6,49 @@ package com.example.group2_caloriecounter;
 
 public class Movie {
 
-    public int title;
-    public String rating;
-    public String year;
+    public int id;
+    public String food;
+    public String count;
+    public String date;
 
     public Movie() {
 
     }
 
-    public Movie(int title, String rating, String year) {
-        this.title = title;
-        this.rating = rating;
-        this.year = year;
+    public Movie(int id, String food, String count, String date) {
+
+        this.food = food;
+        this.count = count;
+        this.date = date;
+        this.id = id;
+
     }
 
-    public int getTitle() {
-        return title;
+    public int getId() {
+        return id;
     }
 
-    public void setTitle(int title) {
-        this.title = title;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getRating() {
-        return rating;
+    public String getFood() {
+        return food;
     }
 
-    public void setRating(String rating) {
-        this.rating = rating;
+    public void setFood(String food) {
+        this.food = food;
     }
 
-    public String getYear() {
-        return year;
+    public String getCount() {
+        return count;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setCount(String count) {
+        this.count = count;
     }
+
+    public String getDate() {return date;}
+
+    public void setDate(String date) {this.date = date; }
 }
