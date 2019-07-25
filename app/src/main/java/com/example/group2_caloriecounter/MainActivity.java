@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     JSONObject postparams;
 
+    Intent list;
+
 
     Button buttonEnter, buttonViewGraph, buttonList;
 
@@ -113,20 +115,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 requestQueue.add(jsonObjReq);
 
+                try {
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                list = new Intent (getApplicationContext(), ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                startActivity(list);
+
+
                 break;
 
             case R.id.buttonViewGraph:
 
-                Intent graph = new Intent (getApplicationContext(), GraphActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                list = new Intent (getApplicationContext(), GraphActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                startActivity(graph);
+                startActivity(list);
 
                 break;
 
             case R.id.buttonList:
-                Intent list = new Intent (getApplicationContext(), ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                list = new Intent (getApplicationContext(), ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 startActivity(list);
+
+                break;
         }
     }
 }

@@ -15,7 +15,7 @@
         <activity android:name=".ListActivity" />
         <activity android:name=".GraphActivity" />
         <activity android:name=".ModifyActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
