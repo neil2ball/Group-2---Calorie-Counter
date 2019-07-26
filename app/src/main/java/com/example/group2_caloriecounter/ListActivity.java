@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -33,10 +34,15 @@ public class ListActivity extends AppCompatActivity {
     private DividerItemDecoration dividerItemDecoration;
     private List<Movie> movieList;
 
+    String androidId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        androidId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         mList = findViewById(R.id.main_list);
 
@@ -65,13 +71,16 @@ public class ListActivity extends AppCompatActivity {
 
                         Movie movie = new Movie();
 
-                        movie.setFood(jsonObject.getString("food"));
-                        movie.setCount(jsonObject.getString("count"));
-                        movie.setDate(jsonObject.getString("date"));
-                        movie.setId(jsonObject.getInt("id"));
+                        if(androidId.equals(jsonObject.getString("android"))) {
+
+                            movie.setFood(jsonObject.getString("food"));
+                            movie.setCount(jsonObject.getString("count"));
+                            movie.setDate(jsonObject.getString("date"));
+                            movie.setId(jsonObject.getInt("id"));
+                            movieList.add(movie);
+                        }
 
 
-                        movieList.add(movie);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,11 +47,16 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
 
     JsonObjectRequest jsonObjReq;
 
+    String androidId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify);
         Log.d(TAG, "onCreate: started.");
+
+        androidId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         foodEditText = findViewById(R.id.food_edittext);
         countEditText = findViewById(R.id.count_edittext);

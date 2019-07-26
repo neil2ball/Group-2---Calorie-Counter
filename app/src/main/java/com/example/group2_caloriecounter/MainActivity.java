@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -42,10 +43,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button buttonEnter, buttonViewGraph, buttonList;
 
+    String androidId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        androidId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         editTextFood = findViewById(R.id.editTextFood);
         editTextCount = findViewById(R.id.editTextCalories);
@@ -86,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     postparams.put("food", food);
                     postparams.put("count", count);
                     postparams.put("date", date);
+                    postparams.put("android", androidId);
                 }
                 catch (JSONException e) {
                     e.printStackTrace();

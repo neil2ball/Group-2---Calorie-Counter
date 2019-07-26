@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,17 +38,20 @@ public class GraphActivity extends AppCompatActivity implements View.OnClickList
 
     private String[][] array;
 
-    private Calendar cal;
-
     GraphView graph;
     LineGraphSeries<DataPoint> series;
 
     Button buttonDaily, buttonWeekly, buttonMonthly;
 
+    String androidId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
+
+        androidId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         graph = findViewById(R.id.graph);
 
@@ -77,9 +81,17 @@ public class GraphActivity extends AppCompatActivity implements View.OnClickList
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
 
+                        if(androidId.equals(jsonObject.getString("android"))) {
+                            array[i][0] = jsonObject.getString("date");
+                            array[i][1] = jsonObject.getString("count");
+                        }
+                        else
+                        {
 
-                        array[i][0] = jsonObject.getString("date");
-                        array[i][1] = jsonObject.getString("count");
+                            array[i][0] = jsonObject.getString("date");
+                            array[i][1] = "0";
+
+                        }
 
 
                     } catch (JSONException e) {
@@ -198,8 +210,10 @@ public class GraphActivity extends AppCompatActivity implements View.OnClickList
                     for (int i = 0; i < dateArray.length; i++) {
                         cal[i].setTime(dateArray[i]);
 
-                        dataPoints[i] = new DataPoint(cal[i].get(Calendar.DAY_OF_YEAR), calorieCount[i]);
-                        Log.wtf("calorieCount", String.valueOf(calorieCount[i]));
+                        if (calorieCount[i] > 0) {
+
+                            dataPoints[i] = new DataPoint(cal[i].get(Calendar.DAY_OF_YEAR), calorieCount[i]);
+                        }
 
                     }
 
@@ -325,8 +339,9 @@ public class GraphActivity extends AppCompatActivity implements View.OnClickList
                     for (int i = 0; i < dateArray.length; i++) {
                         cal[i].setTime(dateArray[i]);
 
-                        dataPoints[i] = new DataPoint(cal[i].get(Calendar.WEEK_OF_YEAR), calorieCount[i]);
-                        Log.wtf("calorieCount", String.valueOf(calorieCount[i]));
+                        if(calorieCount[i] > 0) {
+                            dataPoints[i] = new DataPoint(cal[i].get(Calendar.WEEK_OF_YEAR), calorieCount[i]);
+                        }
 
                     }
 
@@ -380,12 +395,12 @@ public class GraphActivity extends AppCompatActivity implements View.OnClickList
                             e.printStackTrace();
                         }
 
-                        if (cal0.get(Calendar.DAY_OF_YEAR) < cal1.get(Calendar.MONTH))
+                        if (cal0.get(Calendar.MONTH) < cal1.get(Calendar.MONTH))
                         {
                             intCount++;
 
                         }
-                        else if (cal0.get(Calendar.YEAR) < cal1.get(Calendar.MONTH))
+                        else if (cal0.get(Calendar.YEAR) < cal1.get(Calendar.YEAR))
                         {
                             intCount++;
                         }
@@ -452,8 +467,9 @@ public class GraphActivity extends AppCompatActivity implements View.OnClickList
                     for (int i = 0; i < dateArray.length; i++) {
                         cal[i].setTime(dateArray[i]);
 
-                        dataPoints[i] = new DataPoint(cal[i].get(Calendar.MONTH), calorieCount[i]);
-                        Log.wtf("calorieCount", String.valueOf(calorieCount[i]));
+                        if (calorieCount[i] > 0) {
+                            dataPoints[i] = new DataPoint(cal[i].get(Calendar.MONTH), calorieCount[i]);
+                        }
 
                     }
 
