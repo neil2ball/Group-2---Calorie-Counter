@@ -34,7 +34,7 @@ import java.util.Date;
 
 public class GraphActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String url = "http://192.168.0.19:8080/employees";
+    private String url = "https://group2-247923.appspot.com/employees";
 
     private String[][] array;
 

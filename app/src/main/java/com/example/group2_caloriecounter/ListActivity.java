@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
-    private String url = "http://192.168.0.19:8080/employees";
+    private String url = "https://group2-247923.appspot.com/employees";
 
     private RecyclerView mList;
 

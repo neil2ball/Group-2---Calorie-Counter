@@ -43,7 +43,7 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
 
     Intent list;
 
-    String url = "http://192.168.0.19:8080/employees";
+    String url = "https://group2-247923.appspot.com/employees";
 
     JsonObjectRequest jsonObjReq;
 
